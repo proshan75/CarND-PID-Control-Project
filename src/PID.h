@@ -1,8 +1,20 @@
 #ifndef PID_H
 #define PID_H
 
+#include <iostream>     // std::cout
+#include <limits>       // std::numeric_limits
+#include <vector>
+using namespace std;
+
 class PID {
 public:
+  /*
+  * Coefficients
+  */ 
+  double Kp;
+  double Ki;
+  double Kd;
+
   /*
   * Errors
   */
@@ -11,11 +23,14 @@ public:
   double d_error;
 
   /*
-  * Coefficients
+  * Twiddle tolerance
   */ 
-  double Kp;
-  double Ki;
-  double Kd;
+  double Tolerance;
+  int Current_index;
+  int Current_iteration;
+  const int MAX_TWIDDLE_ITERATIONS = 1000;
+  vector<double> Improved_p;
+  bool Error_Initialized;
 
   /*
   * Constructor
@@ -30,7 +45,7 @@ public:
   /*
   * Initialize PID.
   */
-  void Init(double Kp, double Ki, double Kd);
+  void Init(double Kp, double Ki, double Kd, double twiddle_tol = 0.2);
 
   /*
   * Update the PID error variables given cross track error.
@@ -41,6 +56,20 @@ public:
   * Calculate the total PID error.
   */
   double TotalError();
+
+  /*
+  * Perform twiddle correction.
+  */
+  void Twiddle(double cte); 
+  void AddError(double cte);
+  double InitializeError(int num_of_errors);
+  bool ShouldRunTwiddle();
+  void ResetTwiddle();
+
+private:
+  vector<double> _dp, _p;
+  double _best_error, _cte_total;
+  vector<bool> _negated;
 };
 
 #endif /* PID_H */
