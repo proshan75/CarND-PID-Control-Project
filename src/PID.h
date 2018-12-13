@@ -28,7 +28,7 @@ public:
   double Tolerance;
   int Current_index;
   int Current_iteration;
-  const int MAX_TWIDDLE_ITERATIONS = 1000;
+  const int MAX_TWIDDLE_ITERATIONS = 400;
   vector<double> Improved_p;
   bool Error_Initialized;
 
@@ -60,9 +60,9 @@ public:
   /*
   * Perform twiddle correction.
   */
-  void Twiddle(double cte); 
+  void Twiddle(double error); 
   void AddError(double cte);
-  double InitializeError(int num_of_errors);
+  double CalculateError(int num_of_errors);
   bool ShouldRunTwiddle();
   void ResetTwiddle();
 

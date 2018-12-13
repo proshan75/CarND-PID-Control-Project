@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
           double cte = std::stod(j[1]["cte"].get<std::string>());
           double speed = std::stod(j[1]["speed"].get<std::string>());
           double angle = std::stod(j[1]["steering_angle"].get<std::string>());
-          double steer_value;
+          double steer_value = 0.0;
           /*
           * TODO: Calculate steering value here, remember the steering value is
           * [-1, 1].
@@ -94,49 +94,46 @@ int main(int argc, char *argv[])
           if (RUN_TWIDDLE)
           {
             pid.UpdateError(cte);
-            steer_value = normalizeError(pid.TotalError());
-            //steer_value = pid.TotalError();
 
-            if (pid.Current_iteration < pid.MAX_TWIDDLE_ITERATIONS)
+            if (pid.Current_iteration < pid.MAX_TWIDDLE_ITERATIONS) // && RUN_TWIDDLE
             {
               // cout << "i: " << pid.Current_iteration << endl;
-              if (pid.Error_Initialized == false)
-              {
+              // if (pid.Error_Initialized == false)
+              // {
                 pid.AddError(cte);
-              }
-              else
-              {
-                if (pid.ShouldRunTwiddle())
-                {
-                  pid.Current_index %= 3;
-                  pid.Twiddle(cte);
-                  pid.Current_index++;
-                }
-                else
-                {
-                  // best parameter values achieved as follows
-                  //cout << "Improved p: " << pid.Improved_p[0] << " i: " << pid.Improved_p[1] << " d: " << pid.Improved_p[2] << endl;
-                  cout << "-----------------------------------------------------------" << endl;
-                  cout << "-----------------------------------------------------------" << endl;
-                  cout << "Improved p: " << pid.Kp << " i: " << pid.Ki << " d: " << pid.Kd << endl;
-                  cout << "-----------------------------------------------------------" << endl;
-                  cout << "-----------------------------------------------------------" << endl;
-                  RUN_TWIDDLE = false;
-                }
-
-              }
+              // }
               pid.Current_iteration++;
               // cout << " current iteration:" << pid.Current_iteration << endl;
             }
             else
             {
-              pid.InitializeError(pid.Current_iteration);
+              double error = pid.CalculateError(pid.Current_iteration);
+                if (pid.ShouldRunTwiddle())
+                {
+                  pid.Current_index %= 3;
+                  pid.Twiddle(error);
+                  pid.Current_index++;
+                }
+                else
+                {
+                  // best parameter values achieved as follows
+                  // cout << "Improved p: " << pid.Kp << " i: " << pid.Ki << " d: " << pid.Kd << endl;
+                  cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+                  cout << "-----------------------------------------------------------" << endl;
+                  cout << "Improved p: " << pid.Improved_p[0] << " i: " << pid.Improved_p[1] << " d: " << pid.Improved_p[2] << endl;
+                  cout << "-----------------------------------------------------------" << endl;
+                  cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+                  RUN_TWIDDLE = false;
+                }
+
               pid.ResetTwiddle();
               std::string msg2 = "42[\"reset\",{}]";
               ws.send(msg2.data(), msg2.length(), uWS::OpCode::TEXT);
             }
 
-            std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
+            steer_value = normalizeError(pid.TotalError());
+            // steer_value = pid.TotalError();
+            // std::cout << "CTE: " << cte << " Steering Value: " << steer_value << " Speed: " << speed << " Angle: " << angle << std::endl;
 
             json msgJson;
             msgJson["steering_angle"] = steer_value;
@@ -148,6 +145,7 @@ int main(int argc, char *argv[])
           {
             pid.UpdateError(cte);
             steer_value = normalizeError(pid.TotalError());
+            // steer_value = pid.TotalError();
             // DEBUG
             std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
