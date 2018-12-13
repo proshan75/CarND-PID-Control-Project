@@ -107,7 +107,9 @@ void PID::Twiddle(double error)
     // if (this->Current_iteration == 0)
     // {
         // cout << " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << endl;
-        _p[Current_index] += _dp[Current_index];
+        _p[0] += _dp[0];
+        _p[1] += _dp[1];
+        _p[2] += _dp[2];
         cout << " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << endl;
     // }
 
@@ -120,7 +122,9 @@ void PID::Twiddle(double error)
         cout << " changing _dp[Current_index] from " << _dp[Current_index];
         _dp[Current_index] *= 1.1;
         cout << " to " << _dp[Current_index] << " at index " << Current_index << endl;
-        this->Improved_p[Current_index] = _p[Current_index];
+        this->Improved_p[0] = _p[0];
+        this->Improved_p[1] = _p[1];
+        this->Improved_p[2] = _p[2];
     }
     else
     {
@@ -129,7 +133,7 @@ void PID::Twiddle(double error)
         cout << "Negated from " << _p[Current_index] << " to ";
         _p[Current_index] -= 2 * _dp[Current_index];
         cout << _p[Current_index] << endl;
-        // _negated[Current_index] = true;
+        _negated[Current_index] = true;
         // }
         // else
         // {
@@ -140,29 +144,22 @@ void PID::Twiddle(double error)
             cout << " changing _dp[Current_index] from " << _dp[Current_index];
             _dp[Current_index] *= 1.1;
             cout << " to " << _dp[Current_index] << " at index " << Current_index << endl;
-            this->Improved_p[Current_index] = _p[Current_index];
+            this->Improved_p[0] = _p[0];
+            this->Improved_p[1] = _p[1];
+            this->Improved_p[2] = _p[2];
         }
         else
         {
-            // cout << " adding " << _dp[Current_index] << " to " << _p[Current_index];
+            cout << " adding " << _dp[Current_index] << " to " << _p[Current_index];
             _p[Current_index] += _dp[Current_index];
             _dp[Current_index] *= 0.9;
-            // cout << " and reducing to " << _dp[Current_index] << endl;
+            cout << " and reducing to " << _dp[Current_index] << endl;
         }
         // }
     }
 
-    if (Current_index == 0)
-    {
-    this->Kp = _p[Current_index];
-    }
-    else if (Current_index == 1)
-    {
-        this->Ki = _p[1];
-    }
-    else if (Current_index == 2)
-    {
-        this->Kd = _p[2];
-    }
-    cout << ">>>>>>>>>> Kp " << this->Kp << " Ki " << this->Ki << " Kd " << this->Kd << endl;
+    this->Kp = _p[0];
+    this->Ki = _p[1];
+    this->Kd = _p[2];
+    cout << ">>>>>>>>>> Kp " << Kp << " Ki " << Ki << " Kd " << Kd << endl;
 }
