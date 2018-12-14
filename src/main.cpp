@@ -110,9 +110,13 @@ int main(int argc, char *argv[])
               double error = pid.CalculateError(pid.Current_iteration);
                 if (pid.ShouldRunTwiddle())
                 {
+                  // cout << "prior pid.Current_index " << pid.Current_index;
                   pid.Current_index %= 3;
+                  // cout << " mod pid.Current_index "  << pid.Current_index;
                   pid.Twiddle(error);
+                  // cout << " after twiddle pid.Current_index "  << pid.Current_index;
                   pid.Current_index++;
+                  // cout << " incremented pid.Current_index "  << pid.Current_index;
                 }
                 else
                 {

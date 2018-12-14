@@ -51,7 +51,7 @@ double PID::TotalError()
 
 bool PID::ShouldRunTwiddle()
 {
-    double sum_dp = _dp[0] + _dp[1] + _dp[2];
+    double sum_dp = this->_dp[0] + this->_dp[1] + this->_dp[2];
     // cout << "Calculated threshold: " << sum_dp << endl;
     bool result = sum_dp > Tolerance;
     if (!result)
@@ -62,7 +62,7 @@ bool PID::ShouldRunTwiddle()
     }
     else
     {
-        cout << "sum_dp" << sum_dp << endl;
+        cout << "sum_dp " << sum_dp << endl;
         // cout << "=================================================================" << endl;
         // cout << "Kp: " << this->Kp << " Ki " << this->Ki << " Kd " << this->Kd << endl;
         // cout << "=================================================================" << endl;
@@ -91,7 +91,7 @@ void PID::ResetTwiddle()
     this->Error_Initialized = true;
     // this->_negated = {false, false, false};
     this->Current_iteration = 0;
-    this->Current_index = 0;
+    // this->Current_index = 0;
     this->_cte_total = 0.0;
     // this->_p = {0.0, 0.0, 0.0};
     // this->p_error = 0.0,
@@ -101,7 +101,7 @@ void PID::ResetTwiddle()
 
 void PID::Twiddle(double error)
 {
-    cout << "... run twiddle ... index: " << Current_index << " iteration: " << Current_iteration << endl;
+    cout << "... run twiddle ... index: " << this->Current_index << " iteration: " << this->Current_iteration << endl;
     //std::vector<double> p = {Kp, Ki, Kd};
     // Initialize
     // if (this->Current_iteration == 0)
@@ -117,11 +117,11 @@ void PID::Twiddle(double error)
     //cout << " error : " << error << endl;
     if (error < _best_error) //&& !_negated[Current_index]
     {
-        cout << "Improvement 1 error " << error << " compared to " << _best_error << endl;
+        // cout << "Improvement 1 error " << error << " compared to " << _best_error << endl;
         _best_error = error;
-        cout << " changing _dp[Current_index] from " << _dp[Current_index];
+        // cout << " changing _dp[Current_index] from " << _dp[Current_index];
         _dp[Current_index] *= 1.1;
-        cout << " to " << _dp[Current_index] << " at index " << Current_index << endl;
+        // cout << " to " << _dp[Current_index] << " at index " << Current_index << endl;
         this->Improved_p[0] = _p[0];
         this->Improved_p[1] = _p[1];
         this->Improved_p[2] = _p[2];
@@ -130,30 +130,30 @@ void PID::Twiddle(double error)
     {
         // if(!_negated[Current_index])
         // {
-        cout << "Negated from " << _p[Current_index] << " to ";
+        // cout << "Negated from " << _p[Current_index] << " to ";
         _p[Current_index] -= 2 * _dp[Current_index];
-        cout << _p[Current_index] << endl;
+        // cout << _p[Current_index] << endl;
         _negated[Current_index] = true;
         // }
         // else
         // {
         if (error < _best_error)
         {
-            cout << "Improvement 2 error " << error << " compared to " << _best_error << endl;
+            // cout << "Improvement 2 error " << error << " compared to " << _best_error << endl;
             _best_error = error;
-            cout << " changing _dp[Current_index] from " << _dp[Current_index];
+            // cout << " changing _dp[Current_index] from " << _dp[Current_index];
             _dp[Current_index] *= 1.1;
-            cout << " to " << _dp[Current_index] << " at index " << Current_index << endl;
+            // cout << " to " << _dp[Current_index] << " at index " << Current_index << endl;
             this->Improved_p[0] = _p[0];
             this->Improved_p[1] = _p[1];
             this->Improved_p[2] = _p[2];
         }
         else
         {
-            cout << " adding " << _dp[Current_index] << " to " << _p[Current_index];
+            // cout << " adding " << _dp[Current_index] << " to " << _p[Current_index];
             _p[Current_index] += _dp[Current_index];
             _dp[Current_index] *= 0.9;
-            cout << " and reducing to " << _dp[Current_index] << endl;
+            // cout << " and reducing to " << _dp[Current_index] << endl;
         }
         // }
     }
@@ -161,5 +161,5 @@ void PID::Twiddle(double error)
     this->Kp = _p[0];
     this->Ki = _p[1];
     this->Kd = _p[2];
-    cout << ">>>>>>>>>> Kp " << Kp << " Ki " << Ki << " Kd " << Kd << endl;
+    cout << ">>>>>>>>>> Kp " << this->Kp << " Ki " << this->Ki << " Kd " << this->Kd << endl;
 }
