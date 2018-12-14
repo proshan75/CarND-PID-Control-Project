@@ -12,7 +12,10 @@ constexpr double pi() { return M_PI; }
 double deg2rad(double x) { return x * pi() / 180; }
 double rad2deg(double x) { return x * 180 / pi(); }
 
+//////////////////////////////////////////////////
+// Set twiddle flag for PID parameter optimization
 bool RUN_TWIDDLE = true;
+//////////////////////////////////////////////////
 
 // Checks if the SocketIO event has JSON data.
 // If there is data the JSON object in string format will be returned,
@@ -97,38 +100,26 @@ int main(int argc, char *argv[])
 
             if (pid.Current_iteration < pid.MAX_TWIDDLE_ITERATIONS) // && RUN_TWIDDLE
             {
-              // cout << "i: " << pid.Current_iteration << endl;
-              // if (pid.Error_Initialized == false)
-              // {
-                pid.AddError(cte);
-              // }
+              pid.AddError(cte);
               pid.Current_iteration++;
-              // cout << " current iteration:" << pid.Current_iteration << endl;
             }
             else
             {
               double error = pid.CalculateError(pid.Current_iteration);
-                if (pid.ShouldRunTwiddle())
-                {
-                  // cout << "prior pid.Current_index " << pid.Current_index;
-                  pid.Current_index %= 3;
-                  // cout << " mod pid.Current_index "  << pid.Current_index;
-                  pid.Twiddle(error);
-                  // cout << " after twiddle pid.Current_index "  << pid.Current_index;
-                  pid.Current_index++;
-                  // cout << " incremented pid.Current_index "  << pid.Current_index;
-                }
-                else
-                {
-                  // best parameter values achieved as follows
-                  // cout << "Improved p: " << pid.Kp << " i: " << pid.Ki << " d: " << pid.Kd << endl;
-                  cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-                  cout << "-----------------------------------------------------------" << endl;
-                  cout << "Improved p: " << pid.Improved_p[0] << " i: " << pid.Improved_p[1] << " d: " << pid.Improved_p[2] << endl;
-                  cout << "-----------------------------------------------------------" << endl;
-                  cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
-                  RUN_TWIDDLE = false;
-                }
+              if (pid.ShouldRunTwiddle())
+              {
+                pid.Current_index %= 3;
+                pid.Twiddle(error);
+                pid.Current_index++;
+              }
+              else
+              {
+                // best parameter values achieved as follows
+                cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+                cout << "Improved p: " << pid.Kp << " i: " << pid.Ki << " d: " << pid.Kd << endl;
+                cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+                RUN_TWIDDLE = false;
+              }
 
               pid.ResetTwiddle();
               std::string msg2 = "42[\"reset\",{}]";
@@ -136,7 +127,6 @@ int main(int argc, char *argv[])
             }
 
             steer_value = normalizeError(pid.TotalError());
-            // steer_value = pid.TotalError();
             // std::cout << "CTE: " << cte << " Steering Value: " << steer_value << " Speed: " << speed << " Angle: " << angle << std::endl;
 
             json msgJson;
@@ -149,7 +139,6 @@ int main(int argc, char *argv[])
           {
             pid.UpdateError(cte);
             steer_value = normalizeError(pid.TotalError());
-            // steer_value = pid.TotalError();
             // DEBUG
             std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
