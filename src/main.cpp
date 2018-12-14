@@ -119,6 +119,9 @@ int main(int argc, char *argv[])
                 cout << "Improved p: " << pid.Kp << " i: " << pid.Ki << " d: " << pid.Kd << endl;
                 cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
                 RUN_TWIDDLE = false;
+                // Manual driving
+                std::string msg = "42[\"manual\",{}]";
+                ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
               }
 
               pid.ResetTwiddle();

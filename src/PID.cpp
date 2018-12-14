@@ -21,7 +21,9 @@ void PID::Init(double Kp, double Ki, double Kd, double twiddle_tol)
 
     this->_dp = {Kp, Ki, Kd};
     this->_p = {0.0, 0.0, 0.0};
-    _best_error = std::numeric_limits<double>::max();
+    this->_best_error = std::numeric_limits<double>::max();
+    this->_is_storing_best_error = false;
+
 }
 
 void PID::UpdateError(double cte)
@@ -97,6 +99,7 @@ void PID::Twiddle(double error)
     {
         // cout << "Improvement 1 error " << error << " compared to " << _best_error << endl;
         this->_best_error = error;
+        this->_is_storing_best_error = true;
         // cout << " changing _dp[Current_index] from " << _dp[Current_index];
         _dp[Current_index] *= 1.1;
         // cout << " to " << _dp[Current_index] << " at index " << Current_index << endl;
@@ -106,16 +109,18 @@ void PID::Twiddle(double error)
         // cout << "Negated from " << _p[Current_index] << " to ";
         _p[Current_index] -= 2 * _dp[Current_index];
         // cout << _p[Current_index] << endl;
-        if (error < _best_error)
+        if (error < this->_best_error)
         {
             // cout << "Improvement 2 error " << error << " compared to " << _best_error << endl;
-            _best_error = error;
+            this->_best_error = error;
+            this->_is_storing_best_error = true;
             // cout << " changing _dp[Current_index] from " << _dp[Current_index];
             _dp[Current_index] *= 1.1;
             // cout << " to " << _dp[Current_index] << " at index " << Current_index << endl;
         }
         else
         {
+            this->_is_storing_best_error = false;
             // cout << " adding " << _dp[Current_index] << " to " << _p[Current_index];
             _p[Current_index] += _dp[Current_index];
             _dp[Current_index] *= 0.9;

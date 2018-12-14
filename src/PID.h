@@ -29,8 +29,6 @@ public:
   int Current_index;
   int Current_iteration;
   const int MAX_TWIDDLE_ITERATIONS = 400;
-  // vector<double> Improved_p;
-  // bool Error_Initialized;
 
   /*
   * Constructor
@@ -69,7 +67,7 @@ public:
 private:
   vector<double> _dp, _p;
   double _best_error, _cte_total;
-  // vector<bool> _negated;
+  bool _is_storing_best_error;
 };
 
 #endif /* PID_H */
