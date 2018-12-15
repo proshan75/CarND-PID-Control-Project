@@ -38,7 +38,6 @@ std::string hasData(std::string s)
 
 double normalizeError(double error)
 {
-  // cout << __func__ << " input error: " << error;
   double n_error = std::fmod(error, (2 * pi()));
 
   if (n_error < -pi())
@@ -47,7 +46,6 @@ double normalizeError(double error)
     n_error -= 2 * pi();
 
   n_error = ((n_error + pi()) / pi()) - 1.0;
-  // cout << " normalized error: " << n_error << endl;
   return n_error;
 }
 
@@ -100,19 +98,18 @@ int main(int argc, char *argv[])
 
             if (pid.Current_iteration < pid.MAX_TWIDDLE_ITERATIONS) // && RUN_TWIDDLE
             {
+              if (pid.Current_iteration == 0)
+                pid.InitializeTwiddle();
+
               pid.AddError(cte);
               pid.Current_iteration++;
             }
             else
             {
               double error = pid.CalculateError(pid.Current_iteration);
-              if (pid.ShouldRunTwiddle())
-              {
-                pid.Current_index %= 3;
-                pid.Twiddle(error);
-                pid.Current_index++;
-              }
-              else
+              pid.Current_index %= 3;
+              pid.Twiddle(error);
+              if (!pid.ShouldRunTwiddle())
               {
                 // best parameter values achieved as follows
                 cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;

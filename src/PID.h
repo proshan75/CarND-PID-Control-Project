@@ -63,10 +63,12 @@ public:
   double CalculateError(int num_of_errors);
   bool ShouldRunTwiddle();
   void ResetTwiddle();
+  void InitializeTwiddle();
 
 private:
   vector<double> _dp, _p;
   double _best_error, _cte_total;
+  vector<bool> _negated;
   bool _is_storing_best_error;
 };
 
