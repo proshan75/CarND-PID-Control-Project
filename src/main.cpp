@@ -14,7 +14,7 @@ double rad2deg(double x) { return x * 180 / pi(); }
 
 //////////////////////////////////////////////////
 // Set twiddle flag for PID parameter optimization
-bool RUN_TWIDDLE = true;
+bool RUN_TWIDDLE = false;
 //////////////////////////////////////////////////
 
 // Checks if the SocketIO event has JSON data.

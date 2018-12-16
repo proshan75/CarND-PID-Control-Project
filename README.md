@@ -1,7 +1,58 @@
-# CarND-Controls-PID
-Self-Driving Car Engineer Nanodegree Program
+[//]: # (Image References)
+[video1]: ./videos/P_1.avi
+
+# A Vehicle driving using PID controller
+Udacity's Self-Driving Car Engineer Nanodegree Program, a project for second term  
 
 ---
+
+## Project Introduction
+
+This project implements a PID (Proportional, Integral and Derivative) controller in C++ to maneuver a vehicle in a simulated environment on a track. The project involves two steps:
+
+1. Manual step to initialize PID parameters
+
+2. Parameter optimization using _Gradient Decent (Twiddle)_ algorithm
+
+## PID Basics
+
+Using PID controller, for the input signal the controller tries to estimate the output by minimizing the error compared to the desired value by tweaking the three control terms.
+
+* Proportional term: This term influences the output by generating a value in proportion to the error, i.e. if the error is small it outputs a smaller value, however if the error is large then it tries generate larger value to compensate for the larger error.
+
+* Integral term: This term tries to minimize the error by accounting for past errors after the proportional term is applied. As the error in the system is reduced this term tends to reduce as well.
+
+* Differential term: This term provides an estimate to reduce the error in the system by anticipating the future error based on the rate of error change. It exerts a higher value to growing error change vs a smaller value to the reducing error.
+
+**For more technical details visit** [Wikipedia](https://en.wikipedia.org/wiki/PID_controller).
+
+## Project execution
+
+As a first step, I played with each of the PID terms and observed it's impact on the vehicle movement when used indvidually or in combination of them. Here are few trials that I did and capture videos in some cases:
+
+* P modified, I & D set to zero: Executed as `./pid 1.0 0.0 0.0 0.02`
+
+  While the vehicle progresses straight forward and as the road curvature comes into play, the controller is trying to generate steering angle to bring the vehicle back to center position. During this process, the error keeps accumulating and the controller trying to catch up with the error resulting into the vehicle swaying a lot as shown ![here](./videos/P_1.avi).
+
+* I modified, P & D set to zero: Executed as `./pid 0.0 1.0 0.0 0.02`
+
+  In order to handle the systemic bias, when integral controller is applied alone I observed that the steering engaged often and abruptly resulting in an unstable ride as it tries to account various errors from previous runs. ![Here](./videos/I_1.avi) is a video to demonstrate that.
+
+* D modified, P & I set to zero: Executed as `./pid 0.0 0.0. 1.0 0.02`
+
+  To compensate for the error in future steps the D parameter is used.  As we are not applying any P value to correct the course the input D values makes no difference in vehicle maneuver. Following ![video](./videos/D_1.avi) shows the behavior.
+
+* P & D modified, I set to zero: Executed as `./pid 0.5 0.0 2.5 0.02`
+
+  By setting P and D value the vehicle moves within road lanes with few oscillations eventually going it out of control. The ![video](./videos/P_0.5_D_2.5.avi) shows the vehicle going farthest though it can be much more smooth which indicates the parameters needs further tuning.
+
+* Finally, P, I and D all are modified: Executed as `./pid 028 0.00015 2.12 0.02`
+
+  With trial and error in adjusting parameters, the vehicle ran successfully within a track as shown in the following video.
+
+Though it was fun to play and observe the vehicle maneuvering erratically, it was much more fun to implement the gradient descent algorithm covered in the twiddle lessons and optimize these parameters.
+
+
 
 ## Dependencies
 
