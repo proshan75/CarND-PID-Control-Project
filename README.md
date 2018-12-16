@@ -52,7 +52,15 @@ As a first step, I played with each of the PID terms and observed it's impact on
 
 Though it was fun to play and observe the vehicle maneuvering erratically, it was much more fun to implement the gradient descent algorithm covered in the twiddle lessons and optimize these parameters.
 
+Twiddle is enabled in `main.cpp` by setting corresponding flag to true `bool RUN_TWIDDLE = true;`. The optimization is executed as `./pid 0.3 0.0005 2.8 0.01` that initialized the PID parameters for further fine tuning.
 
+Twiddle algorithm is iterated on each of PID parameter for short segment (_400 frames_) and error is measured to adjust the parameter. Following ![video](./videos/Twiddle_iterations.avi) shows the first few iterations. These iterations are executed until the predefined tolerance value (_0.01 specified as the last argument_) is achieved. Finally it generated PID parameters as _Kp: 4.41076 Ki: 0.0172157 Kd: 48.1967_. I scaled down those numbers by the factor of 1/18 to get the numbers in line with the parameters used in manual testing. The final parameters obtained as below:
+
+* Kp: 0.245042222
+* Ki: 0.000956428
+* Kd: 2.677594444
+
+Following ![video](./videos/PID_Twiddle.avi) shows the vehicle maneuvering using these parameters.
 
 ## Dependencies
 
