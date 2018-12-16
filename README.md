@@ -46,9 +46,9 @@ As a first step, I played with each of the PID terms and observed it's impact on
 
   By setting P and D value the vehicle moves within road lanes with few oscillations eventually going it out of control. The ![video](./videos/P_0.5_D_2.5.avi) shows the vehicle going farthest though it can be much more smooth which indicates the parameters needs further tuning.
 
-* Finally, P, I and D all are modified: Executed as `./pid 028 0.00015 2.12 0.02`
+* Finally, P, I and D all are modified: Executed as `./pid 0.28 0.00015 2.12 0.02`
 
-  With trial and error in adjusting parameters, the vehicle ran successfully within a track as shown in the following video.
+  Using the trial and error method in adjusting the parameters, the vehicle ran successfully within a track as shown in the following ![video](./videos/PID_Manual.avi).
 
 Though it was fun to play and observe the vehicle maneuvering erratically, it was much more fun to implement the gradient descent algorithm covered in the twiddle lessons and optimize these parameters.
 
