@@ -56,7 +56,16 @@ int main(int argc, char *argv[])
   PID pid;
   // Initialize the pid variable.
 
-  double kp = std::stod(argv[1]), ki = std::stod(argv[2]), kd = std::stod(argv[3]), tol = std::stod(argv[4]);
+  double kp = 0.245042222, ki = 0.000956428, kd = 2.677594444, tol = 0.01;
+
+  if(argc == 5)
+  {
+    kp = std::atof(argv[1]);
+    ki = std::atof(argv[2]);
+    kd = std::atof(argv[3]);
+    tol = std::atof(argv[4]);
+  }
+
   if (RUN_TWIDDLE)
   {
     pid.Init(kp, ki, kd, tol);
@@ -138,6 +147,7 @@ int main(int argc, char *argv[])
           else
           {
             pid.UpdateError(cte);
+            // steer_value = pid.TotalError();
             steer_value = normalizeError(pid.TotalError());
             // DEBUG
             std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;

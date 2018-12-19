@@ -38,7 +38,7 @@ void PID::UpdateError(double cte)
 double PID::TotalError()
 {
     // cout << __func__ << "...." << endl;
-    double error = -Kp * p_error - Ki * i_error - Kd * d_error;
+    double error = - this->Kp * p_error - this->Ki * i_error - this->Kd * d_error;
     // cout << "Total error: " << error << endl;
     return error;
 }
